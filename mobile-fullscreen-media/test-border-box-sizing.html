@@ -1,0 +1,52 @@
+<meta name="viewport" content="width=device-width" />
+
+<style>
+  *{margin: 0; padding: 0}
+
+  .controls{
+    height: 20px;
+    background: red;
+    font-size: 14px;
+  }
+
+  .box{
+    width: 100%;
+  }
+  img{
+    max-width: 100%;
+  }
+
+  @media(orientation: landscape){
+    .media{
+      height: 100%;
+      padding-bottom: 20px;
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      margin-bottom: -20px;
+    }
+    .controls{
+      width: 100%;
+    }
+    .box{
+      width: 100%; height: 100%;
+      position: relative;
+    }
+    img{
+      height: 100%;
+      margin: 0 auto;
+      display: block;
+    }
+  }
+</style>
+
+<div class="box">
+  <div class="media">
+    <img src="longcat.jpeg" />
+  </div>
+  <div class="controls">
+    whatever
+  </div>
+  <div>
+    text under it
+  </div>
+</div>
