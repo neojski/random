@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      div{
+        border: 1px solid;
+        margin: 10px;
+      }
+      #box{
+        width: 360px;
+        overflow: hidden;
+      }
+      #box > div{
+        width: 98px;
+        display: inline-block;
+        word-spacing; 0;
+      }
+      #y3{
+        height: 300px;
+      }
+      #y2{
+        height: 200px;
+      }
+      #y1{
+        height: 100px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="box">
+      <!-- http://stackoverflow.com/questions/1833734/display-inline-block-extra-margin -->
+      <div id="y1">y1</div><div id="y2">y2</div><div id="y3">y3</div><div class="x">x1</div><div class="x">x2</div><div class="x">x3</div><div class="x">x4</div><div class="x">x5</div><div class="x">x</div><div class="x">x</div><div class="x">x</div><div class="x">x</div><div class="x">x</div><div class="x">x</div><div class="x">x</div><div class="x">x</div>
+    </div>
+
+    <script>
+      var perm = [1, 2, 3];
+      var shuffle = function(){
+        perm.sort(function(){return Math.random() - .5;});
+      };
+      var box = document.getElementById('box');
+      document.onclick = function(){
+        shuffle();
+        for(var i = 0; i < perm.length; i++){
+          box.insertBefore(document.getElementById('y' + perm[i]), box.firstChild);
+        }
+      };
+    </script>
+
+  </body>
+</html>
