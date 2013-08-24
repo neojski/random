@@ -1,0 +1,43 @@
+<html>
+<head>
+  <script src="bower_components/jquery/jquery.js"></script>
+  <script src="bower_components/underscore/underscore.js"></script>
+  <script src="bower_components/backbone/backbone.js"></script>
+  <script src="bower_components/marionette/lib/backbone.marionette.js"></script>
+
+</head>
+<body>
+  <h1>Problem</h1>
+  <p>To display Backbone collection you usually want to create single ModelView and make create CollectionView which will use it. This requires lots of boilerplate code as you have to write code for add, remove and reset events of the model.</p>
+  <h1>Solution</h1>
+  <p>Backbone.Marionette.CollectionView handles all that for us</p>
+  <h1>Example</h1>
+  <p>The code below will add and remove new Models to the Collection when you click on the list</p>
+
+  <script>
+  var collection = new Backbone.Collection([{name: 1, value: 'one'}, {name: 2, value: 'two'}, {name: 3, value: 'three'}]);
+
+  var template = _.template('<div><%= name %> = <%= value %></div>');
+  var ItemView = Backbone.Marionette.ItemView.extend({
+    template: template
+  });
+  var CollectionView = Backbone.Marionette.CollectionView.extend({
+    itemView: ItemView
+  });
+  var collectionView = new CollectionView({
+    collection: collection
+  });
+  collectionView.render();
+  $('body').append(collectionView.el);
+
+  var i = 0;
+  $('body').on('click', function(){
+    if (++i % 3 === 0){
+      collection.remove(collection.at(Math.floor(Math.random() * collection.length)));
+    }else{
+      collection.add(new Backbone.Model({name: i, value: 'val'}));
+    }
+  });
+  </script>
+</body>
+</html>
