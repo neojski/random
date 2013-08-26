@@ -19,25 +19,74 @@
 
   var template = _.template('<div><%= name %> = <%= value %></div>');
   var ItemView = Backbone.Marionette.ItemView.extend({
-    template: template
-  });
-  var CollectionView = Backbone.Marionette.CollectionView.extend({
-    itemView: ItemView
-  });
-  var collectionView = new CollectionView({
-    collection: collection
-  });
-  collectionView.render();
-  $('body').append(collectionView.el);
-
-  var i = 0;
-  $('body').on('click', function(){
-    if (++i % 3 === 0){
-      collection.remove(collection.at(Math.floor(Math.random() * collection.length)));
-    }else{
-      collection.add(new Backbone.Model({name: i, value: 'val'}));
+    template: template,
+    onShow: function(){
+      console.log('show', this.model);
     }
   });
+
+  if (false) {
+    // simple collection view
+    var CollectionView = Backbone.Marionette.CollectionView.extend({
+      itemView: ItemView
+    });
+    var collectionView = new CollectionView({
+      collection: collection
+    });
+    collectionView.render();
+    $('body').append(collectionView.el);
+    collectionView.trigger('show'); // trigger show so that the collectionView triggers show on the children
+  } else {
+    // composite view with loader support
+    var compositeTemplate = _.template('<div class="view"></div><div class="loader">loader</div>');
+    var CompositeView = Backbone.Marionette.CompositeView.extend({
+      initialize: function(){
+      },
+      itemView: ItemView,
+      template: compositeTemplate,
+      itemViewContainer: '.view',
+      ui: {
+        'loader': '.loader'
+      },
+      events: {
+        'click': 'load'
+      },
+      collectionEvents: {
+        'before:load': 'beforeLoad',
+        'after:load': 'afterLoad'
+      },
+      beforeLoad: function(){
+        this.ui.loader.html('loading');
+      },
+      afterLoad: function(){
+        this.ui.loader.html('loaded');
+      },
+      load: function(){
+        this.collection.load();
+      }
+    });
+    var compositeView = new CompositeView({
+      collection: collection
+    });
+    compositeView.render();
+    $('body').append(compositeView.el);
+    compositeView.trigger('show'); // trigger show so that the collectionView triggers show on the children
+  }
+  // this function will do fetch internally
+  var j = 0;
+  collection.load = function() {
+    collection.trigger('before:load'); // do it as marionette does it
+
+    setTimeout(function() {
+      // call fetch
+      for (var i = 0; i < 5; i++) {
+        collection.add({name: 'name' + ++j, value: j});
+      }
+
+      collection.trigger('after:load');
+    }, 1000);
+  }
+  collection.load();
   </script>
 </body>
 </html>
