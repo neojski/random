@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+  <body>
+    <h1>Calculated offsetWidth</h1>
+    <p>It looks like browsers can't calculate offset width correctly for images width css properties of automatic width and specified height and given width and height html attributes</p>
+    <p>What's more funny is that firefox 23.0.1 reports 0 offsetWidth immediately and correct 451 onload but when you remove <code>&lt;!doctype html&gt;</code> you'll get 300 immediately and correct 451 onload.</p>
+    <h2>Test</h2>
+    <p>Test is below, see console. Skip cache when reloading</p>
+    <img id="img" width="640" height="426" src="http://farm3.staticflickr.com/2407/2292460218_2ac72d656b_z.jpg" style="height: 300px; width: auto" />
+    <p>image by <a href="http://www.flickr.com/photos/bslavin/2292460218/in/pool-landscape-in-cc">Barbara L. Slavin</a></p>
+
+    <script>
+      var img = document.getElementById('img');
+      console.log(img.offsetWidth);
+
+      img.onload = function(){
+      console.log(img.offsetWidth);
+      };
+    </script>
+  </body>
+</html>
