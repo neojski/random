@@ -1,0 +1,25 @@
+<html>
+  <style>
+    .parent{
+      width: 500px;
+      border: 1px solid;
+      margin: 0 auto;
+      height: 300px;
+      overflow: hidden;
+      display: block;
+    }
+    .child{
+      height: 500px;
+      background: red;
+      width: 300px;
+      margin: 0 auto;
+    }
+  </style>
+
+  <h1>overflow:hidden does not work for body</h1>
+  <p>Reason: body is not a block element (<a href="http://stackoverflow.com/questions/5003585/different-between-body-overflow-hidden-and-div-overflow-hidden">source</a>)</p>
+
+  <body class="parent">
+    <div class="child">test</div>
+  </body>
+</html>
