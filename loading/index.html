@@ -1,0 +1,43 @@
+<a href="#" class="js-click">load something</a>
+
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script>
+// this is function that we can't modify
+// it calls callback when finished
+var i = 0;
+function submitLike(callback) {
+  console.log('start loading');
+  var that = this;
+  setTimeout(function() {
+    callback('like ' + (++i) + ' submitted');
+  }, 1000);
+}
+
+// we call this function when submitLike has finished
+function updateStuff(result) {
+  console.log('end loading: ' + result);
+}
+
+var loading = false;
+$('.js-click').on('click', function(e) {
+  spinner(e.target, submitLike, updateStuff);
+});
+
+function spinner(el, start, end) {
+  if (el.loading) {
+    return;
+  }
+  el.loading = true;
+
+  var $target = $(el);
+  var $spinner = $('<img src="loader.gif">')
+  $target.after($spinner);
+
+  start(function() {
+    el.loading = false;
+    $spinner.remove();
+    
+    end.call(null, Array.prototype.slice.call(arguments));
+  });
+}
+</script>
