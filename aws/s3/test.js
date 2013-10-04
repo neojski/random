@@ -7,7 +7,9 @@ AWS.config.loadFromPath(process.env.HOME + '/aws.json');
 
 var s3 = new AWS.S3();
 
+// I already have tomasz-test bucket
 function put(){
+  // actually I can't find how to pipe the file into s3...
   var body = fs.readFileSync('longcat.jpeg');
   s3.putObject({Bucket: 'tomasz-test', Key: 'longcat.jpeg', Body: body, ContentType: 'image/jpeg'}, function(err, data) {
     if (err) {
@@ -18,6 +20,7 @@ function put(){
   });
 }
 function get(){
+  // pipe the output into file
   s3.getObject({Bucket: 'tomasz-test', Key: 'longcat.jpeg'}).createReadStream().pipe(fs.createWriteStream('result.jpeg'));
 }
 
