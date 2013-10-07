@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "prelude-ls": "~1.0.3"
+  }
+}
