@@ -1,0 +1,27 @@
+<template>
+	<style>
+	div.breaking{
+		color: red;
+	}
+	</style>
+	<h1>Breaking news</h1>
+	<ul>
+		<content select=".breaking"></content>
+	</ul>
+
+	<h1>Other news</h1>
+	<ul>
+		<content select=".other"></content>
+	</ul>
+</template>
+
+<ul id="host">
+	<li class="breaking">this is breaking news</li>
+	<li class="other">this is news</li>
+	<li class="breaking">this is breaking news</li>
+</ul>
+
+<script>
+var shadow = document.querySelector('#host').webkitCreateShadowRoot(); // WARNING: webkit prefix here
+shadow.appendChild(document.querySelector('template').content);
+</script>
