@@ -13,7 +13,7 @@ function x = jacobi(A, b, eps)
   R = A - D
 
   if spectralRadius(invD * R) >= 1 && !isStrictDiagonallyDominant(A)
-    printf("%s\n", "Method can be non-convergent")
+    printf('%s\n', 'Method can be non-convergent')
   endif
 
   x = [1; 0; 0]

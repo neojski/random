@@ -21,7 +21,7 @@ endfunction
 % gauss seidel method
 function  x = gaussSeidel(A, b, eps)
   if !isStrictDiagonallyDominant(A) && !isSymmetricPositiveDefinite(A)
-    printf("%s\n", "Method can be non-convergent!")
+    printf('%s\n', 'Method can be non-convergent!')
   endif
 
   L = tril(A)
