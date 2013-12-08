@@ -1,26 +1,26 @@
 % check whether matrix is strictly diagonally dominant
-function res = checkStrictDiagonallyDominant(A)
+function res = isStrictDiagonallyDominant(A)
 	res = all( 2*abs(diag(A)) > sum(abs(A),2) )
 endfunction
 
 % check whether matrix is positive definite
-function res = positiveDefinite(A)
+function res = isPositiveDefinite(A)
 	res = all(eig(A) > 0)
 endfunction
 
 % check whether matrix is symmetric
-function res = symmetric(A)
+function res = isSymmetric(A)
 	res = all(all(A == A'))
 endfunction
 
 % check whether matrix is symmetric and positive definite
-function res = symmetricPositiveDefinite(A)
-	res = positiveDefinite(A) && symmetric(A)
+function res = isSymmetricPositiveDefinite(A)
+	res = isPositiveDefinite(A) && isSymmetric(A)
 endfunction
 
 % gauss seidel method
 function  x = gaussSeidel(A, b)
-	if !checkStrictDiagonallyDominant(A) || !symmetricPositiveDefinite(A)
+	if !isStrictDiagonallyDominant(A) || !isSymmetricPositiveDefinite(A)
 		printf("%s\n", "Method can be non-convergent!")
 	endif
 
@@ -30,7 +30,7 @@ function  x = gaussSeidel(A, b)
 
 	x = [1; 0; 0]
 
-	for i = 1:5
+	for i = 1:100
 		x = invL * (b - Us * x)
 	endfor
 endfunction
