@@ -1,4 +1,4 @@
-function f = taylor(x,N)
+function taylor(x,N)
   f = zeros(size(x))
   name = ''
 
@@ -12,9 +12,17 @@ function f = taylor(x,N)
   endfor
 
   plot(x, exp(x), 'r-;exp(x);')
-
   hold off
-  pause
-endfunction
+end
 
-taylor(linspace(0,2), 5)
+function poly(x,N)
+  hold on
+  p = polyfit(x, exp(x), N)
+
+  plot(x, polyval(p, x), strcat('b-;poly(', int2str(N), ');'))
+end
+
+x = linspace(0,2)
+taylor(x, 5)
+poly(x, 5)
+pause
