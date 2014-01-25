@@ -20,3 +20,7 @@ end
 function res = naive(x)
   res = (sin(x).^2) .* cos(x) - (cos(x).^2) .* sin(x)
 end
+
+x = linspace(pi/4 - .5, pi/4 + .5)
+plot(x, abs(better(x) - naive(x)) ./ better(x))
+pause
