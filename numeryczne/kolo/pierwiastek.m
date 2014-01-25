@@ -12,13 +12,15 @@ end
 # point theorem:
 # d(x*, x_n) <= q^n / (1 - q) d(x_1, x_0) =
 # 0.9^n / 0.1 d(x_1, x_0)
-# So this is the possible error value
+# So this is the possible error value. We want the relative
+# error here but since the root is bigger than 1e7 the
+# relative error is much smaller than the absolute one
 
 x = 2e7 # initial root guess
 err = 1 / 0.1 * abs(f(x) - x)
 
 j = 100
-while err > 0.01
+while err > 0.001
   y = f(x)
   x = y
 
