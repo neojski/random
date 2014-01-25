@@ -28,16 +28,25 @@ function  x = gaussSeidel(A, b, eps)
   Us = triu(A,1)
   invL = inv(L)
 
-  x = zeros(size(b), 1)
+  x = b
 
   while norm(A*x - b) > eps
     x = invL * (b - Us * x)
   end
 endfunction
 
-
-% example usage
-A = [2 0 1; 0 1 0; 0 0 1]
-b = [1; 2; 3]
+% Just use previously implemented Gauss-Seidel method
+% Since the results are bigger than 1 the relative error
+% is smaller than 10^-3
+% Also please notice that the columns of the original
+% matrix are permuted so that the diagonal is strictly
+% dominant
+A = [
+    10  0.2  1 -1;
+  -0.2    4 -1  2;
+     0   -1  5 -2;
+    -1    0 -2  4
+]
+b = [-10; 30; 0; 5]
 
 x = gaussSeidel(A, b, 1e-10)
