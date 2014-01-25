@@ -10,7 +10,7 @@
 
 function res = better(x)
   res = -0.5 .* sin(2 .* x) .* sqrt(2)
-  if x >= 0
+  if x <= 0
     res .*= sin(pi/4 - x)
   else
     res .*= cos(pi/4 + x)
@@ -21,6 +21,6 @@ function res = naive(x)
   res = (sin(x).^2) .* cos(x) - (cos(x).^2) .* sin(x)
 end
 
-x = linspace(pi/4 - .5, pi/4 + .5)
+x = linspace(pi/4 - .5, pi/4 + .5, 1000)
 plot(x, abs(better(x) - naive(x)) ./ better(x))
 pause
