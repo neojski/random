@@ -1,5 +1,12 @@
+// generator expression
 function square (seq) {
   return (x*x for (x in seq));
+}
+// or traditional way
+function cube (seq) {
+  for (var x of seq) {
+    yield x*x*x;
+  }
 }
 function seq() {
   for (let i = 0;;) yield i++;
