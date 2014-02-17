@@ -1,6 +1,6 @@
 // generator expression
 function square (seq) {
-  return (x*x for (x in seq));
+  return (x*x for (x of seq));
 }
 // or traditional way
 function cube (seq) {
