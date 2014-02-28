@@ -1,0 +1,22 @@
+<html>
+  <div> a
+    <div>b</div>
+  </div>
+
+  <script>
+  var divs = document.getElementsByTagName('div');
+  var a = divs[0];
+  var b = divs[1];
+
+  function add (el, val, useCapture) {
+    el.addEventListener('click', function () {
+      console.log(val);
+    }, useCapture);
+  }
+
+  add (a, 'capture a', true);
+  add (a, 'bubble a', false);
+  add (b, 'capture b', true);
+  add (b, 'bubble b', false);
+  </script>
+</html>
