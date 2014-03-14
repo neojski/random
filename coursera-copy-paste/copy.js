@@ -7,8 +7,8 @@ for (var i = 0; i < qs.length; i++) {
   var c;
   if (c = q.getElementsByTagName('textarea')[0]) {
     o[nr] = c.value.trim();
-  } else if (c = q.querySelector('.course-quiz-student-answer')) {
-    o[nr] = c.textContent.trim();
+  } else if (c = q.querySelector('.course-quiz-student-answer input:checked')) {
+    o[nr] = c.parentNode.textContent.trim();
   }
 }
 console.log("var o = '" + JSON.stringify(o) + "'");
