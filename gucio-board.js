@@ -15,7 +15,7 @@ function wielokat(n, maxK){
 
       request.post({
         headers: {'content-type' :'application/xml'},
-        url: 'http://grzegorz_gutowski.staff.tcs.uj.edu.pl/board/newpath/',
+        url: 'http://grzegorzgutowski.staff.tcs.uj.edu.pl/board/newpath/',
         body: str
       }, function (error, response, body) {
         console.log(error);
