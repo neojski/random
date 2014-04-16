@@ -97,6 +97,18 @@ fun stakewhile f s = let
   fun take f s acc = let val (v, vs) = seval s in if f v then take f vs (v::acc) else acc end;
 in rev (take f s []) end;
 
+fun srepeat l = let
+  fun srepeat' l start = smemo (fn _ => if null l then (shd start, stl start) else (hd l, srepeat' (tl l)  start));
+in smemo (fn start => let val v::vs = l in (v, srepeat' vs start) end) end;
+
+(* MY FUNCTION, lazy shift *)
+fun shift s = Stream (fn () => seval (stl s));
+
+fun spairs s = szip s (shift s);
+
+
+
 
 val s1 = stab (fn x => x);
 val s2 = stab (fn x => x*x);
+val w = Stream (fn () => (while 1 > 0 do (); seval s1));
