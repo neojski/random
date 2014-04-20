@@ -67,7 +67,7 @@ fun unshiftlist [] s = s
 fun sconst v = smemo (fn s => (v, s));
 
 fun snth 0 s = shd s
-  | snth n s = snth (n-1) s;
+  | snth n s = snth (n-1) (stl s);
 
 fun stake n s = let
   fun stake' 0 s acc = acc
