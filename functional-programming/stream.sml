@@ -58,6 +58,12 @@ fun smemo f = memo (fn the_stream =>
   end
 )
 
+(* MY HELPER FUNCTIONS, lazy shift, lazy unshift *)
+fun sshift s = Stream (fn () => seval (stl s));
+fun unshift v s = smemo (fn _ => (v, s));
+fun unshiftlist [] s = s
+  | unshiftlist (x::xs) s = unshiftlist xs (unshift x s);
+
 fun sconst v = smemo (fn s => (v, s));
 
 fun snth 0 s = shd s
@@ -83,7 +89,7 @@ fun szip s1 s2 = smemo (fn _ => let val (v1, v1s) = seval s1; val (v2, v2s) = se
 
 fun szipwith f s1 s2 = smap f (szip s1 s2);
 
-fun sfoldl f init s = smemo (fn _ => let val (v, vs) = seval s in (init, sfoldl f (f (init, v)) vs) end);
+fun sfoldl f init s = unshift init (smemo (fn _ => let val (v, vs) = seval s in seval (sfoldl f (f (init, v)) vs) end));
 
 fun srev s = let
   fun srev' s acc = smemo (fn _ => let val (v, vs) = seval s in (v::acc, srev' vs (v::acc)) end);
@@ -101,12 +107,6 @@ fun srepeat l = let
   fun srepeat' l start = smemo (fn _ => if null l then seval start else (hd l, srepeat' (tl l)  start));
 in smemo (fn start => let val v::vs = l in (v, srepeat' vs start) end) end;
 
-(* MY FUNCTION, lazy shift, lazy unshift *)
-fun sshift s = Stream (fn () => seval (stl s));
-fun unshift v s = smemo (fn _ => (v, s));
-
-fun unshiftlist [] s = s
-  | unshiftlist (x::xs) s = unshiftlist xs (unshift x s);
 
 fun ssplitn n str = let
   fun sshiftn 0 str = str
@@ -120,10 +120,7 @@ fun spairs s = let
   val strs = ssplitn 2 s;
 in szip (List.nth (strs, 0)) (List.nth (strs, 1)) end;
 
-val s1 = stab (fn x => x);
-val s2 = stab (fn x => x*x);
-val w = Stream (fn () => (while true do (); seval s1));
-
+(* tests, simple
 val nat = snat (fn x => x + 1) 0;
 shd nat;
 stl nat;
@@ -144,3 +141,19 @@ stake 15 (srepeat [1,2,3]);
 stake 10 (spairs nat);
 foldr (fn (str, lst) => (stake 7 str)::lst) [] (ssplitn 5 nat);
 stake 20 (sinterleave (ssplitn 5 nat));
+
+val s1 = stab (fn x => x);
+val s2 = stab (fn x => x*x);
+
+val w = Stream (fn () => (while true do (); seval s1));
+val w1 = unshift 1 w;
+val w2 = unshift 2 w1;
+
+val e = smemo (fn str => (print "xxx\n"; (0, str)));
+
+fun count () = let
+  val c = ref 0;
+in (fn () => (c := !c+1; !c)) end;
+
+val const_test = sconst (count ());
+*)
