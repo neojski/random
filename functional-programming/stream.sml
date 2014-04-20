@@ -106,9 +106,9 @@ in rev (take f s []) end;
 fun srepeat l = smemo (fn start => seval (unshiftlist l start));
 
 fun ssplitn n str = let
-  fun sshiftn 0 str = str
-    | sshiftn n str = sshift (sshiftn (n-1) str);
-  fun modN str = smemo (fn _ => (str, modN (sshiftn n str)));
+  fun stln 0 str = str
+    | stln n str = stln (n-1) (stl str);
+  fun modN str = snat (stln n) str;
 in stake n (smap (smap shd) (snat (smap stl) (modN str))) end;
 
 fun sinterleave l = smap shd (smemo (fn str => seval (unshiftlist l (smap stl str))));
