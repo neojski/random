@@ -70,7 +70,7 @@ in rev (stake' n s []) end;
 
 fun smap f s = smemo (fn _ => let val (v, vs) = seval s in (f v, smap f vs) end);
 
-fun smap1 f s = smemo (fn _ => let val (v, vs) = seval s in (v, vs) end);
+fun smap1 f s = smemo (fn _ => let val (v, vs) = seval s in (f v, vs) end);
 
 fun snat s z = smemo (fn str => (z, smap s str));
 
@@ -98,17 +98,49 @@ fun stakewhile f s = let
 in rev (take f s []) end;
 
 fun srepeat l = let
-  fun srepeat' l start = smemo (fn _ => if null l then (shd start, stl start) else (hd l, srepeat' (tl l)  start));
+  fun srepeat' l start = smemo (fn _ => if null l then seval start else (hd l, srepeat' (tl l)  start));
 in smemo (fn start => let val v::vs = l in (v, srepeat' vs start) end) end;
 
-(* MY FUNCTION, lazy shift *)
-fun shift s = Stream (fn () => seval (stl s));
+(* MY FUNCTION, lazy shift, lazy unshift *)
+fun sshift s = Stream (fn () => seval (stl s));
+fun unshift v s = smemo (fn _ => (v, s));
 
-fun spairs s = szip s (shift s);
+fun unshiftlist [] s = s
+  | unshiftlist (x::xs) s = unshiftlist xs (unshift x s);
 
+fun ssplitn n str = let
+  fun sshiftn 0 str = str
+    | sshiftn n str = sshift (sshiftn (n-1) str);
+  fun modN str = smemo (fn _ => (str, modN (sshiftn n str)));
+in stake n (smap (smap shd) (snat (smap stl) (modN str))) end;
 
+fun sinterleave l = smap shd (smemo (fn str => seval (unshiftlist (rev l) (smap stl str))));
 
+fun spairs s = let
+  val strs = ssplitn 2 s;
+in szip (List.nth (strs, 0)) (List.nth (strs, 1)) end;
 
 val s1 = stab (fn x => x);
 val s2 = stab (fn x => x*x);
-val w = Stream (fn () => (while 1 > 0 do (); seval s1));
+val w = Stream (fn () => (while true do (); seval s1));
+
+val nat = snat (fn x => x + 1) 0;
+shd nat;
+stl nat;
+shd (stl nat);
+snth 10 nat;
+stake 7 nat;
+val twos = sconst 2;
+stake 3 twos;
+stake 10 (smap1 (fn x => x + 7) nat);
+stake 10 (smap (fn x => x * x) nat);
+stake 10 (stab (fn x => (x, x*x, x*x*x)));
+stake 10 (szip nat (szipwith (fn (x, y) => [x+y, x*y]) twos nat));
+stake 8 (sfoldl (fn (x, y) => x * (y+1)) 1 nat);
+stake 5 (srev nat);
+stake 10 (sfilter (fn x => x mod 3 <> 0) nat);
+stakewhile (fn x => x <> 7) nat;
+stake 15 (srepeat [1,2,3]);
+stake 10 (spairs nat);
+foldr (fn (str, lst) => (stake 7 str)::lst) [] (ssplitn 5 nat);
+stake 20 (sinterleave (ssplitn 5 nat));
