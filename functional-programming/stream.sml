@@ -62,7 +62,7 @@ fun smemo f = memo (fn the_stream =>
 fun sshift s = Stream (fn () => seval (stl s));
 fun unshift v s = smemo (fn _ => (v, s));
 fun unshiftlist [] s = s
-  | unshiftlist (x::xs) s = unshiftlist xs (unshift x s);
+  | unshiftlist (x::xs) s = smemo (fn _ => (x, unshiftlist xs s));
 
 fun sconst v = smemo (fn s => (v, s));
 
@@ -103,10 +103,7 @@ fun stakewhile f s = let
   fun take f s acc = let val (v, vs) = seval s in if f v then take f vs (v::acc) else acc end;
 in rev (take f s []) end;
 
-fun srepeat l = let
-  fun srepeat' l start = smemo (fn _ => if null l then seval start else (hd l, srepeat' (tl l)  start));
-in smemo (fn start => let val v::vs = l in (v, srepeat' vs start) end) end;
-
+fun srepeat l = smemo (fn start => seval (unshiftlist l start));
 
 fun ssplitn n str = let
   fun sshiftn 0 str = str
@@ -114,13 +111,11 @@ fun ssplitn n str = let
   fun modN str = smemo (fn _ => (str, modN (sshiftn n str)));
 in stake n (smap (smap shd) (snat (smap stl) (modN str))) end;
 
-fun sinterleave l = smap shd (smemo (fn str => seval (unshiftlist (rev l) (smap stl str))));
+fun sinterleave l = smap shd (smemo (fn str => seval (unshiftlist l (smap stl str))));
 
-fun spairs s = let
-  val strs = ssplitn 2 s;
-in szip (List.nth (strs, 0)) (List.nth (strs, 1)) end;
+fun spairs s = smemo (fn _ => let val (v1, vs1) = seval s; val (v2, vs) = seval vs1 in ((v1, v2), spairs vs) end);
 
-(* tests, simple
+(* tests, simple *)
 val nat = snat (fn x => x + 1) 0;
 shd nat;
 stl nat;
@@ -156,4 +151,3 @@ fun count () = let
 in (fn () => (c := !c+1; !c)) end;
 
 val const_test = sconst (count ());
-*)
