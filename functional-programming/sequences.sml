@@ -119,6 +119,20 @@ fun spairs s = smemo (fn _ => let val (v1, vs1) = seval s; val (v2, vs) = seval 
 (* lazy flatten stream of lists *)
 fun flatten s = smemo (fn _ => seval (unshiftlist (shd s) (flatten (stl s))));
 
-val fibonacci = flatten (unshiftlist [[0]] (smemo (fn str => let
-  val str' = unshiftlist [[1], [0]] str;
-in seval (szipwith (fn (x, y) => x @ y) str' (stl str')) end)));
+val fibonacci = let
+  val fws = smemo (fn str => let
+    val str' = unshiftlist [[1], [0]] str;
+    val res = (szipwith (fn (x, y) => x @ y) str' (stl str'))
+  in seval res end);
+in unshift 0 (flatten fws) end;
+
+
+fun replicate (0, v) = []
+  | replicate (n, v) = v::(replicate (n-1, v))
+fun drop 0 s = s
+  | drop n s = stl (drop (n-1) s)
+
+val kolakoski = unshiftlist [1, 2] (smemo (fn str => let
+  val str' = unshiftlist [1, 2] str;
+  val res = drop 2 (flatten (szipwith replicate str' (srepeat [1, 2])))
+in seval res end));
