@@ -1,4 +1,4 @@
-fun rl () = use "sequences.sml";
+fun rl () = use "stream.sml";
 
 local
   datatype 'a memo_cell = Value of 'a | Computation of unit -> 'a
@@ -135,4 +135,10 @@ fun drop 0 s = s
 val kolakoski = unshiftlist [1, 2] (smemo (fn str => let
   val str' = unshiftlist [1, 2] str;
   val res = drop 2 (flatten (szipwith replicate str' (srepeat [1, 2])))
+in seval res end));
+
+val thuemorse = unshift 0 (smemo (fn str' => let
+  val str = unshift 0 str';
+  val str1 = smap (fn x => 1-x) str;
+  val res = sinterleave [str1, stl str];
 in seval res end));
