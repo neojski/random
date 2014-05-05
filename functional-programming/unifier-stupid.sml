@@ -12,10 +12,10 @@ fun applySub (name, term) (Var n) = if name <> n then Var n else term
 
 fun applySubs subs t = List.foldl (fn (sub, t) => applySub sub t) t subs;
 
-fun contains name (Var n) = name = n
-  | contains name (Fun (_, terms)) = List.exists (fn t => contains name t) terms;
+fun contains (name, (Var n)) = name = n
+  | contains (name, (Fun (_, terms))) = List.exists (fn t => contains (name, t)) terms;
 
-fun checkContains subs = List.exists (fn (n, t) => contains n t) subs;
+fun checkContains subs = List.exists contains subs;
 
 fun unify t1 t2 = let
   fun unifyArgs [] subs = subs
@@ -44,3 +44,8 @@ in if notOk then raise UnifException else subs end;
 val t1 = Fun ([#"f"],[Var [#"x"],Fun ([#"g"],[Var [#"x"],Var [#"y"]])])
 val t2 = Fun ([#"f"],[Fun ([#"h"],[Var [#"y"]]),Var [#"z"]])
 val t3 = Fun ([#"f"],[Fun ([#"h"],[Var [#"z"]]),Var [#"z"]])
+
+val s1 = Fun ([#"f"], [Var [#"x"], Var [#"x"], Var [#"x"]])
+val s2 = Fun ([#"f"], [Fun ([#"g"], [Var [#"y"]]), Var [#"z"], Var [#"w"]])
+
+val s3 = Fun ([#"f"], [Fun ([#"g"], [Var [#"x"]]), Var [#"z"], Var [#"w"]])
