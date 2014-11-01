@@ -1,0 +1,90 @@
+<html>
+<style>
+* {
+  margin: 0;
+  padding; 0;
+}
+body {
+  font-size: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+}
+#container > div {
+  height: 60px;
+}
+#box {
+  clear: right;
+  overflow: hidden;
+}
+#box > span {
+  float: left;
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  background: #eee;
+  border-radius: 4px;
+  margin: 4px;
+}
+</style>
+
+
+<div id="container">
+  <div id="box"></div>
+  <div id="number"></div>
+  <div id="letter"></div>
+</div>
+
+<script>
+// This JS is very naïve.
+var box = document.getElementById('box');
+var number = document.getElementById('number');
+var letter = document.getElementById('letter');
+
+function readState() {
+  var state = window.location.hash.replace(/^#/, '');
+  if (!state) {
+    return;
+  }
+  for (var child = box.firstChild, i = 0; child; child = child.nextSibling, i++) {
+    child.innerHTML = state[i];
+  }
+  update(true);
+}
+
+function update(skipPush) {
+  // Update visuals.
+  var state = [];
+  var total = 0;
+  var pow = 1;
+  for (var child = box.lastChild; child; child = child.previousSibling) {
+    var v = +child.innerHTML;
+    total += pow * v;
+    pow *= 2;
+    state.push(v);
+  }
+  number.innerHTML = total;
+  letter.innerHTML = String.fromCharCode([total]);
+
+  // Update state.
+  if (!skipPush) {
+    history.pushState(null, null, "#" + state.reverse().join(''));
+  }
+}
+
+for (var i = 0; i < 8; i++) {
+  var span = document.createElement('span');
+  span.innerHTML = 0;
+  box.appendChild(span);
+
+  span.onclick = function() {
+    var value = +this.innerHTML;
+    this.innerHTML = 1 - value;
+    update();
+  };
+}
+
+readState();
+</script>
