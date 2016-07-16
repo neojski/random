@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+
+  <style>
+/*#box { position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0
+}*/
+
+.row {
+  font-size: 8px;
+  height: 10px
+}
+.row span {
+  width: 30px;
+  display: inline-block;
+}
+html, body {
+  height: 100%
+}
+#box {
+  overflow: scroll;
+  height: 100%
+}
+#pre { background-color: blanchedalmond }
+#content { background-color: aquamarine }
+#post { background-color: beige }
+  </style>
+
+  <body>
+    <div id="box">
+      <div id="pre"></div>
+      <div id="content">
+      </div>
+      <div id="post"></div>
+    </div>
+
+    <script>
+let pre = document.querySelector('#pre');
+let post = document.querySelector('#post');
+let content = document.querySelector('#content');
+
+let n = 10000;
+let h = 10;
+
+let numPerPage = 60;
+let current = [];
+
+pre.style.height = 0;
+content.style.height = h * numPerPage + 'px';
+post.style.height = (n - numPerPage) * h + 'px';
+
+let start = 0;
+
+box.onscroll = function () {
+  let availableHeight = box.offsetHeight;
+  let top = box.scrollTop;
+
+
+  pre.style.height = top + 'px';
+
+  // insert some inner content
+  let oldStart = start;
+  start = Math.floor(top / h);
+
+  console.log(oldStart, start);
+
+  for (let i = oldStart; i < start; i++) {
+    if (content.firstElement) {
+      content.removeChild(content.firstElement);
+    }
+  }
+
+  let val = '';
+  for (let i = 0; i < numPerPage - box.children.length; i++) {
+    let data = [];
+    for (let j = 0; j < 40; j++) {
+      data.push((top + (j * 124 + i * 14217)) % 1000);
+    }
+    val += '<div class="row"><span>' + top + '</span><span>' + data.join('</span><span>') + '</span></div>';
+  }
+  content.innerHTML = val;
+
+  post.style.height = n * numPerPage - top + 'px';
+};
+
+    </script>
+  </body>
+</html>
