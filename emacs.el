@@ -11,4 +11,4 @@
   (helm-do-ag (shell-command-to-string "echo -n /")))
 
 (spacemacs/set-leader-keys "saf" 'tomasz-search)
-(spacemacs/set-leader-keys "saf" 'tomasz-search-all)
+(spacemacs/set-leader-keys "saF" 'tomasz-search-all)
