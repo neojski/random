@@ -1,5 +1,5 @@
 Compile and eval completion:
-ocamlfind ocamlc -linkpkg -thread -package core -package async -package ppx_jane asdf.ml && COMMAND_OUTPUT_INSTALLATION_BASH=1 $PWD/a.out > /tmp/xxx.sh && . /tmp/xxx.sh
+ocamlfind ocamlc -linkpkg -thread -package core -package async -package ppx_jane playground.ml && COMMAND_OUTPUT_INSTALLATION_BASH=1 $PWD/a.out > /tmp/xxx.sh && . /tmp/xxx.sh
 
 For some reason it doesn't work if you don't give full path of script. Run with:
 <full-path-to-a.out>/a.out
