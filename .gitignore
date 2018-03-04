@@ -1,3 +1,5 @@
 node_modules
 *.cmi
 *.cmo
+_build
+.merlin
