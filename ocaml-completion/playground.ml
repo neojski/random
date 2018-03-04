@@ -1,5 +1,5 @@
-open Core.Std
-open Async.Std
+open Core
+open Async
 
 let friend =
   let open Command.Let_syntax in
@@ -32,7 +32,7 @@ let friend =
   in
 
   let%map_open
-    date = flag "-date" ~doc:"test" (optional_with_default (Date.today ~zone:Time.Zone.local) date)
+    date = flag "-date" ~doc:"test" (optional_with_default (Date.today ~zone:(Lazy.force Time.Zone.local)) date)
   and
     friend_name = anon ("FRIEND_NAME" %: Friend_name.arg_type)
   and
@@ -45,4 +45,4 @@ let friend =
 
 let () =
   Command.run
-    (Command.group ~summary:"cd magic" ["friend", Command.async' ~summary:"friend" friend])
+    (Command.group ~summary:"cd magic" ["friend", Command.async ~summary:"friend" friend])
