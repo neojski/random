@@ -4,6 +4,7 @@
 #include <linux/uaccess.h>
 
 // This is based on https://www.apriorit.com/dev-blog/195-simple-driver-for-linux-os
+// See also: https://linux-kernel-labs.github.io/master/labs/device_drivers.html
 
 static const char    data[] = "Hello world from kernel mode!\n\0";
 static ssize_t device_file_read(struct file *file_ptr, char __user *user_buffer, size_t count, loff_t *offset) {
