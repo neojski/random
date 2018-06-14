@@ -1,5 +1,7 @@
 1. install linux-headers
 1. make clean
 1. make all
+1. journalctl -kf
 1. insmod main.ko
-1. dmesg
+1. mknod device c <major, see output of journalctl> <minor, may be 0>
+1. cat device
