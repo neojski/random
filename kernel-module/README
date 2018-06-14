@@ -1,0 +1,5 @@
+1. install linux-headers
+1. make clean
+1. make all
+1. insmod main.ko
+1. dmesg
