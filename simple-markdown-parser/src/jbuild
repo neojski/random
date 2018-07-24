@@ -1,0 +1,8 @@
+(jbuild_version 1)
+
+(library
+ ((name simple_markdown_parser_src)
+  (libraries (core async re2 angstrom))
+  (inline_tests)
+  (preprocess (pps (ppx_jane)))
+))

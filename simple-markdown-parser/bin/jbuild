@@ -1,0 +1,7 @@
+(jbuild_version 1)
+
+(executable
+ ((name main)
+  (libraries (simple_markdown_parser_src))
+  (preprocess (pps (ppx_jane)))
+))

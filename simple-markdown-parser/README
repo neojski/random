@@ -1,0 +1,4 @@
+Compile and eval completion:
+
+jbuilder build playground.exe
+source <(COMMAND_OUTPUT_INSTALLATION_BASH=1 _build/default/playground.exe)
