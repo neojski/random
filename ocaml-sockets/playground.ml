@@ -1,9 +1,11 @@
 open! Core
 open! Async
 
+let server_port = 1234
+
 let main_server ~close_sender () =
   printf "main\n";
-  let where_to_listen = Tcp.Where_to_listen.of_port 1234 in
+  let where_to_listen = Tcp.Where_to_listen.of_port server_port in
   let%bind server = 
     Tcp.Server.create_sock
       where_to_listen
@@ -46,6 +48,7 @@ let main_client () =
   (* There's [Tcp.connect] but we use low-level functions just for fun. *)
   let socket = Socket.create Socket.Type.tcp in
   let%bind socket =
+    (* Please note we bind to a funny address and predefined port. *)
     let%bind inet_addr = Unix.Inet_addr.of_string_or_getbyname "127.0.0.8" in
     let address = Socket.Address.Inet.create inet_addr ~port:8888 in
     printf !"binding to: %{sexp: Socket.Address.Inet.t}\n" address;
@@ -53,7 +56,7 @@ let main_client () =
   in
   let%bind socket =
     let%bind inet_addr = Unix.Inet_addr.of_string_or_getbyname "127.0.0.1" in
-    let address = Socket.Address.Inet.create inet_addr ~port:1234 in
+    let address = Socket.Address.Inet.create inet_addr ~port:server_port in
     printf !"connecting to: %{sexp: Socket.Address.Inet.t}\n" address;
     Socket.connect socket address
   in
