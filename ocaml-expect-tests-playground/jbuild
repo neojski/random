@@ -1,0 +1,8 @@
+(jbuild_version 1)
+
+(library
+ ((name playground)
+  (libraries (core async))
+  (inline_tests)
+  (preprocess (pps (ppx_jane)))
+))
