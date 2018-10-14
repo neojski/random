@@ -1,0 +1,8 @@
+(jbuild_version 1)
+
+(executable
+ ((name main)
+  (libraries (core async))
+  (preprocess (pps (ppx_jane)))
+  (ocamlopt_flags (:standard -O3))
+))
