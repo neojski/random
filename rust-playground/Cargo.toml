@@ -4,3 +4,7 @@ version = "0.1.0"
 authors = ["Tomasz Kołodziejski <tkolodziejski@gmail.com>"]
 
 [dependencies]
+
+[[bin]]
+name = "iterator"
+path = "iterator.rs"
