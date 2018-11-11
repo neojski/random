@@ -26,12 +26,7 @@ module Path = struct
       )
 
   let parse x =
-    let aux (type t) (type acc)
-        (of_string : string -> t)
-        (return : (acc * t) -> string * (acc * t))
-        ((str : string), (acc : acc))
-        : string * (acc * t)
-      =
+    let aux of_string return (str, acc) =
       match String.lsplit2 ~on:'/' str with
       | None -> return (acc, of_string str)
       | Some (x, rest) -> rest, (acc, of_string x)
