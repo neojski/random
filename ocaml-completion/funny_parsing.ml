@@ -37,11 +37,13 @@ module Path = struct
       | Some (x, rest) -> rest, (acc, of_string x)
     in
     With_return.with_return (fun { return } ->
-        (x, ())
-        |> aux A.of_string (fun ((), a) -> return (A a))
-        |> aux B.of_string (fun (((), a), b) -> return (B (a, b)))
-        |> aux C.of_string (fun ((((), a), b), c) -> return (C (a, b, c)));
-
+        let () =
+          (x, ())
+          |> aux A.of_string (fun ((), a) -> return (A a))
+          |> aux B.of_string (fun (((), a), b) -> return (B (a, b)))
+          |> aux C.of_string (fun ((((), a), b), c) -> return (C (a, b, c)))
+          |> ignore (* we throw away the partially parsed values here *)
+        in
         raise_s [%message "Failed to parse" (x : string)]
       )
 end
