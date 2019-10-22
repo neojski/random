@@ -1,5 +1,12 @@
 open Core
 
+module A = struct
+
+end
+
+let y = { hello }
+let x = [ hello]
+
 module A = String_id.Make (struct let module_name = "A" end) ()
 module B = String_id.Make (struct let module_name = "B" end) ()
 module C = String_id.Make (struct let module_name = "C" end) ()
@@ -52,6 +59,15 @@ let command =
     printf !"%{sexp:Path.t}\n" (Path.parse "a/b");
     printf !"%{sexp:Path.t}\n" (Path.parse "a/b/c");
     printf !"%{sexp:Path.t}\n" (Path.parse "a/b/c/d");
-;;
+  ;;
 
 let () = Command.run (Command.basic ~summary:"" command)
+
+let n x =
+match x with
+  | Test ->
+    let x = in
+    1 + ( match x with
+        | X -> 1
+        | Y -> 2)
+
