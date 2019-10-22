@@ -1,7 +1,0 @@
-(jbuild_version 1)
-
-(executables
- ((names (playground funny_parsing))
-  (libraries (core async))
-  (preprocess (pps (ppx_jane)))
-))
