@@ -23,9 +23,6 @@
   actions.set("all", function () {
     keyCombo("ga");
   });
-  actions.set("go to label", function () {
-    keyCombo("gl");
-  });
   actions.set("label", function () {
     keyCombo("l");
   });
@@ -34,7 +31,7 @@
     .filter((x) => x.href.indexOf("label") > -1)
     .map((x) => x.href.slice(x.href.indexOf("#")))
     .forEach(function (label) {
-      actions.set(label, function () {
+      actions.set(label.replace("#label/", "#"), function () {
         // Looks like this doesn't work due to isTrusted property, see:
         // https://developer.mozilla.org/en-US/docs/Web/API/Event/isTrusted
         // It may be possible to make this work with a browser extension:
@@ -53,6 +50,7 @@
   class Suggestions {
     constructor() {
       this.box = document.createElement("div");
+      this.box.style = "overflow: scroll; max-height: 200px";
       this.selected = 0;
     }
 
@@ -65,16 +63,20 @@
     }
 
     render() {
+      console.log(this.selected);
       this.box.innerHTML = "";
+      let selectedLi;
       for (let i = 0; i < this.suggestions.length; i++) {
         let k = this.suggestions[i][0];
         let li = document.createElement("li");
         li.innerHTML = k;
         if (i === this.selected) {
           li.style = "background: #add8e6";
+          selectedLi = li;
         }
         this.box.appendChild(li);
       }
+      if (selectedLi) selectedLi.scrollIntoView({ block: "nearest" });
     }
 
     update(command) {
@@ -126,13 +128,14 @@
     box.appendChild(form);
     box.appendChild(suggestions.getBox());
     let input = document.createElement("input");
+    input.style.width = "100%";
     input.onkeyup = function () {
       suggestions.update(input.value);
     };
     form.appendChild(input);
     document.body.appendChild(box);
     box.style =
-      "position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 40px; border-radius: 20px; z-index: 1000";
+      "position: absolute; top: 50%; left: 50%; width:400px; transform: translate(-50%, -50%); background: white; padding: 40px; border-radius: 20px; z-index: 1000";
     input.focus();
     form.onsubmit = function () {
       close();
