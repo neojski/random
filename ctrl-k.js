@@ -34,6 +34,8 @@
     let search = document.querySelector("#gs_taif50").previousElementSibling;
     search.focus();
     setTimeout(function () {
+      // Looks like this doesn't work due to isTrusted property, see:
+      // https://developer.mozilla.org/en-US/docs/Web/API/Event/isTrusted
       search.dispatchEvent(new KeyboardEvent("keydown", { key: k })); // I can't figure out why this doesn't work
     }, 100);
   });
