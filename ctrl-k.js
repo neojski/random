@@ -131,7 +131,7 @@
     box.appendChild(form);
     box.appendChild(suggestions.getBox());
     let input = document.createElement("input");
-    input.style.width = "100%";
+    input.style = "width: 100%; font-size: 25px; box-sizing: border-box";
     input.onkeyup = function () {
       suggestions.update(input.value);
     };
