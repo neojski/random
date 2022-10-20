@@ -154,17 +154,16 @@
       run();
       return false;
     }
-    if (!box) {
-      return false;
-    }
-    if (e.key === "ArrowUp") {
-      suggestions.prevSelected();
-    }
-    if (e.key === "ArrowDown") {
-      suggestions.nextSelected();
-    }
-    if (e.key === "Escape") {
-      close();
+    if (box) {
+      if (e.key === "ArrowUp") {
+        suggestions.prevSelected();
+      }
+      if (e.key === "ArrowDown") {
+        suggestions.nextSelected();
+      }
+      if (e.key === "Escape") {
+        close();
+      }
     }
   };
 })();
