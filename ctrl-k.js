@@ -31,9 +31,11 @@
   });
   actions.set("#money-stuff", function () {
     keyCombo("gigl");
+    let search = document.querySelector("#gs_taif50").previousElementSibling;
+    search.focus();
     setTimeout(function () {
-      keyCombo("m");
-    }, 1000);
+      search.dispatchEvent(new KeyboardEvent("keydown", { key: k })); // I can't figure out why this doesn't work
+    }, 100);
   });
   actions.set("select all", function () {
     keyCombo("*a");
