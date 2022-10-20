@@ -63,7 +63,6 @@
     }
 
     render() {
-      console.log(this.selected);
       this.box.innerHTML = "";
       let selectedLi;
       for (let i = 0; i < this.suggestions.length; i++) {
@@ -122,7 +121,11 @@
     box = null;
   }
 
-  f = function () {
+  function run() {
+    if (box) {
+      close();
+      return;
+    }
     box = document.createElement("div");
     let form = document.createElement("form");
     box.appendChild(form);
@@ -145,10 +148,13 @@
       }
       return false;
     };
-  };
+  }
   document.onkeydown = function (e) {
     if (e.ctrlKey && e.key === "k") {
-      f();
+      run();
+      return false;
+    }
+    if (!box) {
       return false;
     }
     if (e.key === "ArrowUp") {
