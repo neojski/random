@@ -29,16 +29,19 @@
   actions.set("label", function () {
     keyCombo("l");
   });
-  actions.set("#money-stuff", function () {
-    keyCombo("gigl");
-    let search = document.querySelector("#gs_taif50").previousElementSibling;
-    search.focus();
-    setTimeout(function () {
-      // Looks like this doesn't work due to isTrusted property, see:
-      // https://developer.mozilla.org/en-US/docs/Web/API/Event/isTrusted
-      search.dispatchEvent(new KeyboardEvent("keydown", { key: k })); // I can't figure out why this doesn't work
-    }, 100);
-  });
+  // add all labels
+  [...document.querySelectorAll("a")]
+    .filter((x) => x.href.indexOf("label") > -1)
+    .map((x) => x.href.slice(x.href.indexOf("#")))
+    .forEach(function (label) {
+      actions.set(label, function () {
+        // Looks like this doesn't work due to isTrusted property, see:
+        // https://developer.mozilla.org/en-US/docs/Web/API/Event/isTrusted
+        // It may be possible to make this work with a browser extension:
+        // https://chromedevtools.github.io/devtools-protocol/tot/Input/#method-dispatchKeyEvent
+        window.location.hash = label;
+      });
+    });
   actions.set("select all", function () {
     keyCombo("*a");
   });
@@ -54,8 +57,9 @@
     }
 
     computeSuggestions(command) {
+      let pattern = new RegExp(command.replaceAll(" ", ".*"));
       let candidates = [...actions].filter(function ([k, v]) {
-        return k.indexOf(command) > -1;
+        return pattern.test(k);
       });
       return candidates;
     }
@@ -85,8 +89,11 @@
     }
 
     nextPrevSelected(i) {
-      this.selected =
-        (this.selected + i + this.suggestions.length) % this.suggestions.length;
+      if (this.suggestions.length > 0) {
+        this.selected =
+          (this.selected + i + this.suggestions.length) %
+          this.suggestions.length;
+      }
       this.render();
     }
 
@@ -129,7 +136,10 @@
     input.focus();
     form.onsubmit = function () {
       close();
-      submit(suggestions.getSelected());
+      let suggestion = suggestions.getSelected();
+      if (suggestion) {
+        submit(suggestions.getSelected());
+      }
       return false;
     };
   };
