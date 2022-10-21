@@ -196,12 +196,15 @@
     if (box) {
       if (e.key === "ArrowUp") {
         suggestions.prevSelected();
+        return false;
       }
       if (e.key === "ArrowDown") {
         suggestions.nextSelected();
+        return false;
       }
       if (e.key === "Escape") {
         close();
+        return false;
       }
     }
   };
