@@ -52,6 +52,7 @@
       this.box = document.createElement("div");
       this.box.style = "overflow: scroll; max-height: 200px";
       this.selected = 0;
+      this.update("");
     }
 
     computeSuggestions(command) {
@@ -63,6 +64,7 @@
     }
 
     render() {
+      console.log(this.selected);
       this.box.innerHTML = "";
       let selectedLi;
       for (let i = 0; i < this.suggestions.length; i++) {
@@ -111,6 +113,45 @@
     }
   }
 
+  class Input {
+    constructor() {
+      this.box = document.createElement("div");
+      this.box.style =
+        "position: relative; width: 100%; font-size: 25px; box-sizing: border-box; overflow: hidden";
+      this.typeahead = document.createElement("div");
+      this.typeahead.style = "position: absolute; top: 0; left: 0; color: grey";
+      this.box.appendChild(this.typeahead);
+      this.form = document.createElement("form");
+      this.box.appendChild(this.form);
+      this.input = document.createElement("input");
+      this.input.style =
+        "background: transparent; border: 0; margin: 0; padding: 0; position: relative";
+      this.form.appendChild(this.input);
+    }
+    setSuggestion([suggestion]) {
+      if (suggestion.startsWith(this.getInput())) {
+        this.typeahead.innerHTML = suggestion; // TODO: lazy impl
+      } else {
+        this.typeahead.innerHTML = "";
+      }
+    }
+    getBox() {
+      return this.box;
+    }
+    getInput() {
+      return this.input.value;
+    }
+    focus() {
+      this.input.focus();
+    }
+    onsubmit(f) {
+      this.form.onsubmit = f;
+    }
+    onchange(f) {
+      this.input.onkeyup = f;
+    }
+  }
+
   let suggestions = new Suggestions();
   let box;
 
@@ -127,27 +168,25 @@
       return;
     }
     box = document.createElement("div");
-    let form = document.createElement("form");
-    box.appendChild(form);
+    let input = new Input();
+    box.appendChild(input.getBox());
     box.appendChild(suggestions.getBox());
-    let input = document.createElement("input");
-    input.style = "width: 100%; font-size: 25px; box-sizing: border-box";
-    input.onkeyup = function () {
-      suggestions.update(input.value);
-    };
-    form.appendChild(input);
+    input.onchange(function () {
+      suggestions.update(input.getInput());
+      input.setSuggestion(suggestions.getSelected());
+    });
     document.body.appendChild(box);
     box.style =
-      "position: absolute; top: 50%; left: 50%; width:400px; transform: translate(-50%, -50%); background: white; padding: 40px; border-radius: 20px; z-index: 1000";
+      "position: absolute; top: 50%; left: 50%; width:400px; transform: translate(-50%, -50%); background: white; padding: 40px; border-radius: 20px; z-index: 1000; box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;";
     input.focus();
-    form.onsubmit = function () {
+    input.onsubmit(function () {
       close();
       let suggestion = suggestions.getSelected();
       if (suggestion) {
         submit(suggestions.getSelected());
       }
       return false;
-    };
+    });
   }
   document.onkeydown = function (e) {
     if (e.ctrlKey && e.key === "k") {
