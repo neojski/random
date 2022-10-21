@@ -128,7 +128,7 @@
         "background: transparent; border: 0; margin: 0; padding: 0; position: relative";
       this.form.appendChild(this.input);
     }
-    setSuggestion([suggestion]) {
+    setSuggestion(suggestion) {
       if (suggestion.startsWith(this.getInput())) {
         this.typeahead.innerHTML = suggestion; // TODO: lazy impl
       } else {
@@ -173,7 +173,13 @@
     box.appendChild(suggestions.getBox());
     input.onchange(function () {
       suggestions.update(input.getInput());
-      input.setSuggestion(suggestions.getSelected());
+      let suggestion = suggestions.getSelected();
+      if (suggestion) {
+        suggestion = suggestion[0];
+      } else {
+        suggestion = "";
+      }
+      input.setSuggestion(suggestion);
     });
     document.body.appendChild(box);
     box.style =
