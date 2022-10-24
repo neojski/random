@@ -27,6 +27,24 @@
     keyCombo("l");
   });
   // add all labels
+  const labels = new Set();
+  setInterval(function () {
+    [...document.querySelectorAll("a")]
+    .filter((x) => x.href.indexOf("label") > -1)
+    .map((x) => x.href.slice(x.href.indexOf("#")))
+    .forEach(function (label) {
+      if (!labels.has(label)) {
+        labels.add(label);
+        actions.set(label.replace("#label/", "#"), function () {
+          // Looks like this doesn't work due to isTrusted property, see:
+          // https://developer.mozilla.org/en-US/docs/Web/API/Event/isTrusted
+          // It may be possible to make this work with a browser extension:
+          // https://chromedevtools.github.io/devtools-protocol/tot/Input/#method-dispatchKeyEvent
+          window.location.hash = label;
+        });
+      }
+    });
+  }, 1000);
   [...document.querySelectorAll("a")]
     .filter((x) => x.href.indexOf("label") > -1)
     .map((x) => x.href.slice(x.href.indexOf("#")))
